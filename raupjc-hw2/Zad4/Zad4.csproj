@@ -40,8 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HomeworkLinqQuerie.cs" />
+    <Compile Include="HomeworkLinqQueries.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="University.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Zad1\Zad1.csproj">
