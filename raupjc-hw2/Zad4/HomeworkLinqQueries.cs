@@ -52,6 +52,7 @@ namespace Zad4
                                           .GroupBy(s => s)
                                           .Where(g => g.Count() >= 2)
                                           .Select(g => g.Key)
+                                          .Distinct()
                                           .ToArray();
             }
 

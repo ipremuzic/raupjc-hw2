@@ -4,8 +4,8 @@ namespace Zad2
 {
     public class DuplicateTodoItemException : Exception
     {
-        public DuplicateTodoItemException(string message)
-            :base(message)
+        public DuplicateTodoItemException(Guid id)
+            :base($"duplicate id: {id}")
         {
         }
     }

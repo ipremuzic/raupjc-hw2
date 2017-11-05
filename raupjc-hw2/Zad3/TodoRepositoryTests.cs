@@ -1,65 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Zad2;
 
 namespace Zad3
 {
     [TestClass]
-    public class UnitTest1
+    public class TodoRepositoryTests
     {
-
-        //TodoItem test methods
-
-        [TestMethod]
-        public void MarkAsCompleted_Test()
-        {
-            TodoItem item= new TodoItem("TodoItem 1.");
-
-            Assert.IsFalse(item.IsCompleted);
-
-            item.MarkAsCompleted();
-            Assert.IsTrue(item.IsCompleted);
-
-            Assert.IsFalse(item.MarkAsCompleted());
-        }
-
-        [TestMethod]
-        public void Equals_Test()
-        {
-            TodoItem item = new TodoItem("TodoItem 1.");
-            TodoItem item2 = new TodoItem("TodoItem 2.");
-
-            Assert.IsTrue(item.Equals(item));
-            Assert.IsFalse(item.Equals(item2));
-        }
-
-        [TestMethod]
-        public void GetHashCode_Test()
-        {
-            TodoItem item = new TodoItem("TodoItem 1.");
-            TodoItem item2 = new TodoItem("TodoItem 2.");
-
-            Assert.IsTrue(item.GetHashCode()==item.GetHashCode());
-            Assert.IsFalse(item.GetHashCode()==item2.GetHashCode());
-        }
-
-
-        //TodoRepository test methods
-
         [TestMethod]
         [ExpectedException(typeof(DuplicateTodoItemException))]
         public void AddGet_Test()
         {
-            ITodoRepository repository=new TodoRepository();
+            ITodoRepository repository = new TodoRepository();
             TodoItem item = new TodoItem("TodoItem 1.");
 
             Assert.IsNull(repository.Get(item.Id));
             Assert.AreEqual(item, repository.Add(item));
             Assert.AreEqual(item, repository.Get(item.Id));
 
-            TodoItem item2=new TodoItem("TodoItem 2.");
+            TodoItem item2 = new TodoItem("TodoItem 2.");
 
             Assert.AreEqual(item2, repository.Add(item2));
             Assert.AreEqual(item, repository.Get(item.Id));
@@ -96,16 +58,17 @@ namespace Zad3
         {
             ITodoRepository repository = new TodoRepository();
             TodoItem item = new TodoItem("TodoItem 1.");
+            TodoItem item2 = new TodoItem("TodoItem 2.");
 
-            Assert.AreEqual(item, repository.Update(item));
-            Assert.AreEqual(repository.Get(item.Id),repository.Update(item));
+            repository.Update(item);
+            Assert.AreEqual(repository.Get(item.Id), item);
 
             item.DateCompleted = DateTime.MaxValue;
             item.DateCreated = DateTime.MinValue;
             repository.Update(item);
 
-            Assert.AreEqual(repository.Get(item.Id).DateCompleted, repository.Update(item).DateCompleted);
-            Assert.AreEqual(repository.Get(item.Id).DateCreated, repository.Update(item).DateCreated);
+            Assert.AreEqual(repository.Get(item.Id).DateCompleted, item.DateCompleted);
+            Assert.AreEqual(repository.Get(item.Id).DateCreated, item.DateCreated);
         }
 
 
@@ -134,12 +97,12 @@ namespace Zad3
             item.DateCreated = DateTime.MinValue;
             TodoItem item2 = new TodoItem("TodoItem 2.");
             TodoItem item3 = new TodoItem("TodoItem 3.");
-            item3.DateCreated=DateTime.MaxValue;
+            item3.DateCreated = DateTime.MaxValue;
             repository.Add(item);
             repository.Add(item2);
             repository.Add(item3);
 
-            List<TodoItem> list = new List<TodoItem>(){ item, item2, item3};
+            List<TodoItem> list = new List<TodoItem>() { item, item2, item3 };
 
             Assert.IsTrue(list.OrderByDescending(t => t.DateCreated)
                               .ToList()
@@ -166,7 +129,7 @@ namespace Zad3
             repository.Add(item4);
             repository.Add(item5);
 
-            List<TodoItem> list= new List<TodoItem>(){item, item3, item5};
+            List<TodoItem> list = new List<TodoItem>() { item, item3, item5 };
 
             Assert.IsTrue(new HashSet<TodoItem>(list).SetEquals(repository.GetActive()));
             Assert.AreEqual(list.Count, repository.GetActive().Count);                      //nepotrebno vjv
@@ -216,10 +179,11 @@ namespace Zad3
             repository.Add(item4);
             repository.Add(item5);
 
-            List<TodoItem> list = new List<TodoItem>() {item2, item4};
+            List<TodoItem> list = new List<TodoItem>() { item2, item4 };
 
             Assert.IsTrue(new HashSet<TodoItem>(list).SetEquals(repository.GetFiltered(t => t.IsCompleted)));
         }
 
     }
 }
+

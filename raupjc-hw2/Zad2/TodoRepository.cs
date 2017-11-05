@@ -37,14 +37,14 @@ namespace Zad2
 
          public TodoItem Get(Guid todoId)
          {
-             return _inMemoryTodoDatabase.FirstOrDefault(t => t.Id.Equals(todoId)); //možda problem
+             return _inMemoryTodoDatabase.FirstOrDefault(t => t.Id.Equals(todoId)); 
          }
 
          public TodoItem Add(TodoItem todoItem)
          {
-             if (_inMemoryTodoDatabase.Any(t => t.Equals(todoItem)))               //mozda promijenit ovo s equals
+             if (_inMemoryTodoDatabase.Contains(todoItem))              
              {
-                 throw new DuplicateTodoItemException($"duplicate id: {todoItem.Id}");      //popravit exception
+                 throw new DuplicateTodoItemException(todoItem.Id);  
              }
              _inMemoryTodoDatabase.Add(todoItem);
              return todoItem;
@@ -52,7 +52,7 @@ namespace Zad2
 
          public bool Remove(Guid todoId)
          {
-             if (_inMemoryTodoDatabase.Any(t => t.Id.Equals(todoId)))             //može se s containts i bez if-a
+             if (_inMemoryTodoDatabase.Any(t => t.Id.Equals(todoId)))             
              {
                  var itemToRemove = _inMemoryTodoDatabase.First(t => t.Id.Equals(todoId));
                  return _inMemoryTodoDatabase.Remove(itemToRemove);
@@ -62,7 +62,7 @@ namespace Zad2
 
          public TodoItem Update(TodoItem todoItem)
          {
-             if (_inMemoryTodoDatabase.Contains(todoItem)) //možda krivo
+             if (_inMemoryTodoDatabase.Contains(todoItem)) 
              {
                  _inMemoryTodoDatabase.First(t => t.Equals(todoItem)).DateCompleted = todoItem.DateCompleted;
                  _inMemoryTodoDatabase.First(t => t.Equals(todoItem)).DateCreated = todoItem.DateCreated;
